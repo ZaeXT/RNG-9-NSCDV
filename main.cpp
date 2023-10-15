@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 {
    QApplication a(argc, argv);
    QWidget w;
-   QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+   QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
    w.setSizePolicy(sizePolicy);
    QTimer ter, ier, mer;
    QList<QString> rndChar;
@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
    text_show->setText("开抽！");
    text_show->setFont(font);
    text_show->setAlignment(Qt::AlignCenter);
+   text_show->setSizePolicy(sizePolicy);
    ter.setInterval(IntervalScroll_ter);
    ier.setInterval(IntervalScroll_ier);
    QMessageBox startMsg, msgBoxNCD, msgYuanNum;
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
                      {
                         text_show->setText(name[upch][0] + spacekey + name[upch][1] + spacekey + name[upch][2]);
                         ScrollFlag = false;
-                        if (!name[upch].compare(QString("张弛斌")))
+                        if (upch == 25)
                         {
                            Ctime = 0;
                         }
