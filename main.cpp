@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QFont>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QList>
 #include <QMessageBox>
@@ -44,21 +45,28 @@ int main(int argc, char *argv[])
            << "_"
            << "+";
    int upch = 0;
-   QVBoxLayout *layout = new QVBoxLayout(&w);
+   QVBoxLayout *Vlayout = new QVBoxLayout(&w);
+   QHBoxLayout *Hlayout = new QHBoxLayout(&w);
    QLabel *text_show = new QLabel(&w);
    QFont font, yuanfont;
    font.setPointSize(24);
    yuanfont.setPointSize(10);
-   layout->addWidget(text_show);
+   Vlayout->addWidget(text_show);
    text_show->setText("开抽！");
    text_show->setFont(font);
+   text_show->setAlignment(Qt::AlignCenter);
    ter.setInterval(IntervalScroll_ter);
    ier.setInterval(IntervalScroll_ier);
-   QMessageBox msgBoxNCD, msgYuanNum;
+   QMessageBox startMsg, msgBoxNCD, msgYuanNum;
+   startMsg.setWindowTitle("Changelog");
+   startMsg.setText("更新：\n1、文本居中\n2、添加十连（待完成");
+   startMsg.show();
    msgBoxNCD.setText("触发保底！");
    // msgYuanNum.setText("您的缘不足！\n建议重开\n按确定重开");
    // msgYuanNum.setWindowTitle("缘石 OS");
    msgBoxNCD.setWindowTitle("NSCD OS");
+   QMessageBox announce;
+   announce.setText("在做了在做了（咕咕咕");
    QObject::connect(&ter, &QTimer::timeout, [&]()
                     { if (ScrollFlag && displayChar == 0 && mode == 0)
                      {
@@ -86,7 +94,7 @@ int main(int argc, char *argv[])
                      {
                         text_show->setText(name[upch][0] + spacekey + name[upch][1] + spacekey + name[upch][2]);
                         ScrollFlag = false;
-                        if (name[upch][0] == QString("张") && name[upch][1] == QString("驰") && name[upch][2] == QString("斌"))
+                        if (!name[upch].compare(QString("张弛斌")))
                         {
                            Ctime = 0;
                         }
@@ -95,7 +103,7 @@ int main(int argc, char *argv[])
                            Ctime++;
                         }
                      }
-                     else if (Ctime >= 5 && name[upch][2] != QString("斌"))
+                     else if (Ctime >= 30 && name[upch][2] != QString("斌"))
                      {
                         text_show->setText("张 弛 斌");
                         QTimer::singleShot(timeOutMsg, &msgBoxNCD, &QMessageBox::accept);
@@ -105,10 +113,14 @@ int main(int argc, char *argv[])
    QObject::connect(&ier, &QTimer::timeout, [&]()
                     { displayChar++; });
    QPushButton *buttom160 = new QPushButton("160缘", &w);
-   layout->addWidget(buttom160);
+   QPushButton *buttom1600 = new QPushButton("1600缘", &w);
+   Hlayout->addWidget(buttom160);
+   Hlayout->addWidget(buttom1600);
+   Vlayout->addLayout(Hlayout);
    QLabel *YuanNum = new QLabel("您的缘还有：114514", &w);
    YuanNum->setFont(yuanfont);
-   layout->addWidget(YuanNum);
+   YuanNum->setAlignment(Qt::AlignCenter);
+   Vlayout->addWidget(YuanNum);
    QObject::connect(buttom160, &QPushButton::clicked, [&]
                     {
                        if (yuanshi >= 160)
@@ -132,6 +144,9 @@ int main(int argc, char *argv[])
                              QApplication::quit();
                            }
                        } });
+   QObject::connect(buttom1600, &QPushButton::clicked, [&]
+                    {
+                     announce.show(); });
    // ter.start();
    // ier.start();
    w.show();
