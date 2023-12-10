@@ -79,13 +79,13 @@ jobs:
 
     - name: Upload App(Win)
       if: matrix.os == 'windows-latest'
-      uses: action/upload-artifact@v3
+      uses: action/upload-artifact@v2
       with:
         name: RNG-9-NSCDV-build-Rel
         path: build/Release
     - name: Upload App(UNIX)
       if: matrix.os != 'windows-latest'
-      uses: action/upload-artifact@v3
+      uses: action/upload-artifact@v2
       with:
         name: RNG-9-NSCDV-build
         path: build
