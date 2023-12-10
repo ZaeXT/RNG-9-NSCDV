@@ -17,11 +17,11 @@ int mode = 0;
 int Ctime = 0;
 int timeOutMsg = 500;
 int yuanshi = 114514;
-QString name[] = {"巴雷!", "包宇恒", "陈晶晶", "陈佩琪", "黄彦玮", "姜王迪", "李精锐", "刘静雯", "刘周心", "柳子恒", "马佳豪", "马文军", "潘梓豪", "沈一!", "殳楷博", "王羽郴", "王哲宇", "吴国祥", "吴家兴", "肖曦文", "徐景飏", "徐秋雨", "杨坤元", "姚杭晨", "俞佳扬", "张弛斌", "张创!", "张帅!", "张天浩", "张鑫琳", "张伊靓", "张奕阳", "张宇喆", "钟韩易", "朱妍!", "朱钰欣", "朱正天"};
+QString name[] = {"巴雷!", "包宇恒", "陈晶晶", "陈佩琪", "黄彦玮", "姜王迪", "李精锐", "刘静雯", "刘周心", "柳子恒", "马佳豪", "马文军", "潘梓豪", "沈一!", "殳楷博", "王羽郴", "王哲宇", "吴国祥", "吴家兴", "肖曦文", "徐景飏", "徐秋雨", "杨坤元", "姚杭晨", "俞佳扬", "张弛斌", "张创!", "张帅!", "张天浩", "张鑫琳", "张伊靓", "张奕阳", "张宇喆", "钟韩易", "朱妍!", "朱钰欣", "朱正天","姚董轩"};
 
 QString spacekey = " ";
 
-int gen_rnd(int gen_min = 0, int gen_max = 36);
+int gen_rnd(int gen_min = 0, int gen_max = name->size()-1);
 
 int main(int argc, char *argv[])
 {
@@ -66,8 +66,6 @@ int main(int argc, char *argv[])
    // msgYuanNum.setText("您的缘不足！\n建议重开\n按确定重开");
    // msgYuanNum.setWindowTitle("缘石 OS");
    msgBoxNCD.setWindowTitle("NSCD OS");
-   QMessageBox announce;
-   announce.setText("在做了在做了（咕咕咕");
    QObject::connect(&ter, &QTimer::timeout, [&]()
                     { if (ScrollFlag && displayChar == 0 && mode == 0)
                      {
@@ -146,10 +144,23 @@ int main(int argc, char *argv[])
                            }
                        } });
    QObject::connect(buttom1600, &QPushButton::clicked, [&]
-                    {
-                     announce.show(); });
-   // ter.start();
-   // ier.start();
+                    { QMessageBox::StandardButton Enreply;
+                      Enreply= QMessageBox::Question(&w,"确认：","即将切换到：\n<font color='red'>Enhanced Mode</font>\n确认继续？",QMessageBox::Yes | QMessageBox::No);
+                      if (Enreply == QMessageBox::Yes)
+                      {
+                        QMainWindow enhanced;
+                        enhanced.setWindowTitle("NSCD-9-RNG-Deluxe_Edition.");
+                      }
+                        else
+                        {
+                           yuanshi -= 1600;
+                           QMessageBox noenhanced;
+                           noenhanced.setWindowTitle("Feedback");
+                           noenhanced.setText("Aborted.\nTips:Yuanshi subed.");
+                           noenhanced.show();
+                      }
+                      
+                       });
    w.show();
    return a.exec();
 }
