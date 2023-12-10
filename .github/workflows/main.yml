@@ -24,7 +24,7 @@ jobs:
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
         os: [ubuntu-latest, windows-latest , macos-latest]
-        build_type: [all]
+        build_type: [Release]
         c_compiler: [gcc]
         cpp_compiler: [g++]
         include:
@@ -72,7 +72,7 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
     
     - name: Pack App(Win)
       if: matrix.os == 'windows-latest'
