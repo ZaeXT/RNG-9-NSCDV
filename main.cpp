@@ -21,7 +21,7 @@ QString name[] = {"巴雷!", "包宇恒", "陈晶晶", "陈佩琪", "黄彦玮",
 
 QString spacekey = " ";
 
-int gen_rnd(int gen_min = 0, int gen_max = name->size() - 1);
+int gen_rnd(int gen_min = 0, int gen_max = 37);
 
 int main(int argc, char *argv[])
 {
