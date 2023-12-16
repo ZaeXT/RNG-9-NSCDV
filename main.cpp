@@ -7,7 +7,6 @@
 #include <QList>
 #include <QMainWindow>
 #include <QMessageBox>
-#include <QOBject>
 #include <QPushButton>
 #include <QTimer>
 #include <QVBoxLayout>
