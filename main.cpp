@@ -26,12 +26,9 @@ QString name[] = {"巴雷!", "包宇恒", "陈晶晶", "陈佩琪", "黄彦玮",
 QString spacekey = " ";
 
 int gen_rnd(int gen_min = 0, int gen_max = 37);
-<<<<<<< HEAD
-=======
 
 void HappyTen(QWidget &wi, QSizePolicy &sizePolicy);
 QList<QString> rndChar;
->>>>>>> 06ff712 ([Enhance]Added 10 连(Per-Version))
 
 int main(int argc, char *argv[])
 {
