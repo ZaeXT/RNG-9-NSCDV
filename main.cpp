@@ -34,11 +34,11 @@ int main(int argc, char *argv[])
 {
    QApplication app(argc, argv);
    QMessageBox msgBoxNCD;
-   QWidget w, enhanced;
-   enhanced.setWindowTitle("NSCD-9-RNG-Deluxe_Edition.");
+   QWidget w;
+
    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
    w.setSizePolicy(sizePolicy);
-   enhanced.setSizePolicy(sizePolicy);
+
    QTimer ter, ier;
    int upch = 0;
    rndChar << "!"
@@ -157,8 +157,17 @@ int main(int argc, char *argv[])
                        Enreply = QMessageBox::question(&w, "确认：", "即将切换到：\nEnhanced Mode\n确认继续？", QMessageBox::Yes | QMessageBox::No);
                        if (Enreply == QMessageBox::Yes)
                        {
-                          HappyTen(enhanced,sizePolicy);
-                        //   enhanced.hide();
+                           QWidget *enhanced=new QWidget;
+                           enhanced->setWindowTitle("NSCD-9-RNG-Deluxe_Edition.");
+                           enhanced->setSizePolicy(sizePolicy);
+                           HappyTen(*enhanced, sizePolicy);
+                           QTimer dWidget;
+                           dWidget.singleShot(100, [&]()
+                           {
+                              enhanced->deleteLater();
+                           });
+
+                           //   enhanced.hide();
                        }
                        else
                        {
