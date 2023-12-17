@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <QApplication>
+#include <QCheckBox>
 #include <QDebug>
 #include <QFont>
 #include <QHBoxLayout>
@@ -11,22 +12,27 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <mutex>
+#include <set>
 
 const int IntervalScroll_ter = 50;
 const int IntervalScroll_ier = 1000;
 bool ScrollFlag = true;
+bool UniqueFlag = false;
 int displayChar = 0;
 int mode = 0;
 int Ctime = 0;
 const int timeOutMsg = 500;
 int yuanshi = 114514;
+std::set<int> used_upch;
+std::mutex mtx;
 QString name[] = {"巴雷!", "包宇恒", "陈晶晶", "陈佩琪", "黄彦玮", "姜王迪", "李精锐", "刘静雯", "刘周心", "柳子恒", "马佳豪", "马文军", "潘梓豪", "沈一!", "殳楷博", "王羽郴", "王哲宇", "吴国祥", "吴家兴", "肖曦文", "徐景飏", "徐秋雨", "杨坤元", "姚杭晨", "俞佳扬", "张弛斌", "张创!", "张帅!", "张天浩", "张鑫琳", "张伊靓", "张奕阳", "张宇喆", "钟韩易", "朱妍!", "朱钰欣", "朱正天", "姚董轩"};
 
 QString spacekey = " ";
 
 int gen_rnd(int gen_min = 0, int gen_max = 37);
 
-void HappyTen(QWidget &wi, QSizePolicy &sizePolicy);
+void HappyTen(QWidget &wi, QSizePolicy &sizePolicy, const bool UniqueFlag);
 QList<QString> rndChar;
 
 int main(int argc, char *argv[])
@@ -72,6 +78,7 @@ int main(int argc, char *argv[])
    startMsg.show();
    msgBoxNCD.setText("触发保底！");
    msgBoxNCD.setWindowTitle("NSCD OS");
+   QCheckBox *checkBox = new QCheckBox("去重", &w);
    QObject::connect(&ter, &QTimer::timeout, [&]()
                     { if (ScrollFlag && displayChar == 0 && mode == 0)
                      {
@@ -121,6 +128,18 @@ int main(int argc, char *argv[])
    QPushButton *buttom1600 = new QPushButton("1600缘", &w);
    Hlayout->addWidget(buttom160);
    Hlayout->addWidget(buttom1600);
+   Hlayout->addWidget(checkBox);
+   // 将布尔值与QCheckBox的状态绑定
+   QObject::connect(checkBox, &QCheckBox::stateChanged, [&]()
+                    {
+                       if (checkBox->isChecked())
+                       {
+                          UniqueFlag = true;
+                       }
+                       else
+                       {
+                          UniqueFlag = false;
+                       } });
    Vlayout->addLayout(Hlayout);
    QLabel *YuanNum = new QLabel("您的缘还有：114514", &w);
    YuanNum->setFont(yuanfont);
@@ -156,17 +175,22 @@ int main(int argc, char *argv[])
                        Enreply = QMessageBox::question(&w, "确认：", "即将切换到：\nEnhanced Mode\n确认继续？", QMessageBox::Yes | QMessageBox::No);
                        if (Enreply == QMessageBox::Yes)
                        {
-                           QWidget *enhanced=new QWidget;
-                           enhanced->setWindowTitle("NSCD-9-RNG-Deluxe_Edition.");
-                           enhanced->setSizePolicy(sizePolicy);
-                           HappyTen(*enhanced, sizePolicy);
-                           QTimer dWidget;
-                           dWidget.singleShot(100, [&]()
-                           {
-                              enhanced->deleteLater();
-                           });
-
-                           //   enhanced.hide();
+                          buttom1600->setEnabled(false);
+                          checkBox->setEnabled(false);
+                          buttom1600->setText("抽卡ing...");
+                          QWidget *enhanced = new QWidget;
+                          mtx.unlock();
+                          used_upch.clear();
+                          enhanced->setWindowTitle("NSCD-9-RNG-Deluxe_Edition.");
+                          enhanced->setSizePolicy(sizePolicy);
+                          HappyTen(*enhanced, sizePolicy, UniqueFlag);
+                          QTimer dWidget;
+                          dWidget.singleShot(100, [&]()
+                                             { enhanced->deleteLater(); });
+                          QTimer::singleShot(10*750, [&]()
+                                             { buttom1600->setText("1600缘");
+                                               buttom1600->setEnabled(true);
+                                               checkBox->setEnabled(true); });
                        }
                        else
                        {
@@ -180,7 +204,7 @@ int main(int argc, char *argv[])
    return app.exec();
 }
 // 逐个输出十个名字
-void HappyTen(QWidget &wi, QSizePolicy &sizePolicy)
+void HappyTen(QWidget &wi, QSizePolicy &sizePolicy, const bool UniqueFlag)
 {
    int upch = 0;
    bool ScrollFlag[10] = {true};
@@ -210,7 +234,22 @@ void HappyTen(QWidget &wi, QSizePolicy &sizePolicy)
                         ScrollFlag[i] = true;
                         displayChar[i] = 0;
                         mode[i] = gen_rnd(0, 1);
-                        upch = gen_rnd();
+                        qDebug()<<UniqueFlag<<'\n';
+                        if (UniqueFlag)
+                        {
+                           mtx.lock();
+                           do
+                           {
+                              upch = gen_rnd();
+                           } while (used_upch.find(upch) != used_upch.end());
+                           used_upch.insert(upch);
+                           mtx.unlock();
+                        }
+                        else
+                        {
+                           upch = gen_rnd();
+                        }
+                        
                         //QLabel *text_showi = new QLabel(&wi);
                         Hlayout->addWidget(text_show[i]);
                         QFont font;
@@ -224,7 +263,7 @@ void HappyTen(QWidget &wi, QSizePolicy &sizePolicy)
                         //ier[i].start();
                         QObject::connect(&ter[i], &QTimer::timeout, [=]() mutable
                                          { 
-                        qDebug()<<ScrollFlag[i]<< ' '<<displayChar[i]<< ' '<<mode[i]<<'\n';
+                        //qDebug()<<ScrollFlag[i]<< ' '<<displayChar[i]<< ' '<<mode[i]<<'\n';
                      if (ScrollFlag[i] && displayChar[i] == 0 && mode[i] == 0)
                      {
                         text_show[i]->setText(name[upch][0]+spacekey+rndChar[gen_rnd(0,int(rndChar.size())-1)]+spacekey+rndChar[gen_rnd(0,int(rndChar.size())-1)]);
