@@ -3,12 +3,17 @@
 
 #include <QMainWindow>
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);
+
     ~MainWindow();
+
+private slots:
+
+    void getList();
 };
+
 #endif // MAINWINDOW_H
