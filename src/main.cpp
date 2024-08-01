@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "../include/mainwindow.h"
 #include <QApplication>
 #include <QCheckBox>
 #include <QDebug>
@@ -18,6 +18,7 @@
 #include <mutex>
 #include <set>
 #include <QVector>
+#include <QObject>
 
 const int IntervalScroll_ter = 50;
 const int IntervalScroll_ier = 1000;
@@ -37,7 +38,7 @@ std::mutex mtx;
 QVector<QString> name;
 
 QString spacekey = " ";
-
+QString displayName = "开抽！";
 int gen_rnd(int gen_min = 0, int gen_max = 37);
 
 void HappyTen(QWidget &wi, QSizePolicy &sizePolicy, const bool UniqueFlag);
@@ -47,9 +48,8 @@ QList<QString> rndChar;
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     QMessageBox msgBoxNCD;
-    MainWindow wmain;
+    MainWindow mainWindow;
     QWidget w;
-
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     w.setSizePolicy(sizePolicy);
 
@@ -176,8 +176,8 @@ int main(int argc, char *argv[]) {
         }
         YuanNum->setText("您的缘还有：" + QString::number(yuanshi));
     });
-    wmain.setCentralWidget(&w);
-    wmain.show();
+    //mainWindow.setCentralWidget(&w);
+    mainWindow.show();
     return app.exec();
 }
 

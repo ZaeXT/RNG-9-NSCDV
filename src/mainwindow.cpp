@@ -1,22 +1,14 @@
-#include "mainwindow.h"
-#include <QMenu>
-#include <QMenuBar>
-#include <QAction>
-#include <QWidgetAction>
-#include <QCheckBox>
-#include <QString>
-#include <QFileDialog>
-#include <QFile>
-#include <QTextStream>
-#include <QMessageBox>
-#include <QVector>
-#include <QActionGroup>
+#include "../include/mainwindow.h"
+#include "../include/displayWidget.h"
+#include "../include/operationWidget.h"
+
 
 extern QVector<QString> name;
 extern bool UniqueFlag;
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent) {
+    resize(230, 210);
     // 菜单栏
     QMenu *configMenu = menuBar()->addMenu("配置");
     QMenu *toolsMenu = menuBar()->addMenu("工具");
@@ -63,6 +55,39 @@ MainWindow::MainWindow(QWidget *parent)
             UniqueFlag = false;
         }
     });
+    // 设置主界面
+    QWidget *centralWidget = new QWidget(this);
+    setCentralWidget(centralWidget);
+    QVBoxLayout *Vlayout = new QVBoxLayout(centralWidget);
+    // 显示区
+    displayWidget *dispWidget = new displayWidget(centralWidget);
+    // 操作区
+    operationWidget *operWidget = new operationWidget(centralWidget);
+
+    Vlayout->addWidget(dispWidget);
+    Vlayout->addWidget(operWidget);
+
+
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+    QSize size = event->size();
+    int newWidth = size.width();
+    int newHeight = size.height();
+    float curRatio = (float) newWidth / (float) newHeight;
+    if (newWidth < 230) {
+        newWidth = 230;
+    }
+    if (newHeight < 210) {
+        newHeight = 210;
+    }
+    if (curRatio < minRatio) {
+        newWidth = (int) (newHeight * minRatio);
+        newHeight = newWidth / minRatio;
+    }
+    qDebug() << curRatio << " " << newWidth << " " << newHeight;
+    resize(newWidth, newHeight);
+    event->ignore();
 
 }
 
