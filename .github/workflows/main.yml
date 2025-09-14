@@ -67,7 +67,7 @@ jobs:
             cpp_compiler: g++
 
     steps:
-    - uses: actions/checkout@v5.0.0
+    - uses: actions/checkout@v4
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
@@ -101,19 +101,19 @@ jobs:
 
     - name: Upload App(Win)
       if: matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v3.1.3
+      uses: actions/upload-artifact@v4
       with:
         name: RNG-9-NSCDV-build-Rel
         path: build/Release
     - name: Upload App(Mac)
       if: matrix.os == 'macos-latest'
-      uses: actions/upload-artifact@v3.1.3
+      uses: actions/upload-artifact@v4
       with:
         name: RNG-9-NSCDV-build-Mac
         path: build
     - name: Upload App(Linux)
       if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v3.1.3
+      uses: actions/upload-artifact@v4
       with:
         name: RNG-9-NSCDV-build-Linux
         path: build
